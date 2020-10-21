@@ -1,0 +1,1 @@
+from information_retrieval.models.ranker_model import *
