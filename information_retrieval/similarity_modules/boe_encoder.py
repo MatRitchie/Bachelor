@@ -6,12 +6,13 @@ from registrable import Registrable
 
 from allennlp.modules import Seq2VecEncoder
 from allennlp.data import TextFieldTensors
-from allennlp.modules.seq2vec_encoders.cls_pooler import ClsPooler
+from allennlp.modules.seq2vec_encoders import BagOfEmbeddingsEncoder
 
 from information_retrieval.similarity_modules.base import RelevanceMatcher
 
-@RelevanceMatcher.register('bert_cls')
-class BertCLS(RelevanceMatcher):
+
+@RelevanceMatcher.register('boe_encoder')
+class BagOfEmbeddings(RelevanceMatcher):
     def __init__(
         self,
         input_dim: int,
@@ -19,8 +20,7 @@ class BertCLS(RelevanceMatcher):
     ):
         super().__init__(input_dim=input_dim*4, **kwargs)
       
-        # Gets the [CLS] token from BERT
-        self._seq2vec_encoder = ClsPooler(embedding_dim=input_dim)
+        self._seq2vec_encoder = BagOfEmbeddingsEncoder(embedding_dim=input_dim, averaged=True)
 
     def forward(
         self,
