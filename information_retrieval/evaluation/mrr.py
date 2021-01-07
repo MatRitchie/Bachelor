@@ -14,7 +14,7 @@ class MRR(RankingMetric):
         labels = torch.cat(self._all_gold_labels, dim=0)
         masks = torch.cat(self._all_masks, dim=0)
 
-        score = mrr(predictions, labels, masks).item()
+        score = mrr(predictions, labels, masks).item()  #item copies element from array an return as scalar
 
         if reset:
             self.reset()
@@ -27,13 +27,13 @@ def first_nonzero(t):
     return indices
 
 def mrr(y_pred, y_true, mask):
-    y_pred = y_pred.masked_fill(~mask, -1)
-    y_true = y_true.ge(y_true.max(dim=-1, keepdim=True).values).float()
+    y_pred = y_pred.masked_fill(~mask, -1)                              #Replaces all mask values with -1
+    #y_true = y_true.ge(y_true.max(dim=-1, keepdim=True).values).float() # This binarizes the label, which isn't needed, since it is a one-hot label
 
-    _, idx = y_pred.sort(descending=True, dim=-1)
-    ordered_truth = y_true.gather(1, idx)
+    _, rank = y_pred.sort(descending=True, dim=-1)                      #Sort the predicted scores in descending order, gets predicted ranking
+    ordered_truth = y_true.gather(1, rank)                              #gather indexes from predicted scores from true scores
     
-    gold = torch.arange(y_true.size(-1)).unsqueeze(0).type_as(y_true)
-    _mrr = (ordered_truth / (gold + 1)) * mask
+    gold = torch.arange(y_true.size(-1)).unsqueeze(0).type_as(y_true)   #Ordered indices
+    _mrr = (ordered_truth / (gold + 1)) * mask                          #Devides the truth by indices, and zeros out all the masks
     
-    return _mrr.gather(1, first_nonzero(ordered_truth)).mean()
+    return _mrr.gather(1, first_nonzero(ordered_truth)).mean()         #gets the mean of the batch for the first non-zero element 
