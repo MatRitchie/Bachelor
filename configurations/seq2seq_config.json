@@ -1,0 +1,60 @@
+{
+    "dataset_reader": {
+        "type": "seq2seq",
+        "source_tokenizer" : {
+            "type": "whitespace"
+        },
+        "source_token_indexers": {
+            "tokens": {
+                "type": "single_id"
+            }
+        }, 
+        "delimiter": ","
+    },
+    
+    "train_data_path": "/content/gdrive/My Drive/Kaggle/LYRICS_DATASET_train.csv",
+    "validation_data_path": "/content/gdrive/My Drive/Kaggle/LYRICS_DATASET_dev.csv",
+   
+    "model": {
+        "type": "simple_seq2seq",
+        "source_embedder": {
+            "token_embedders": {
+              "tokens": {
+                "type": "embedding",
+                "embedding_dim": 256
+              }
+            }
+          },
+        "encoder" :{
+            "type": "stacked_self_attention",
+            "input_dim": 256,
+            "hidden_dim": 256, 
+            "projection_dim": 128,
+            "feedforward_hidden_dim": 128,
+            "num_layers": 1,
+            "num_attention_heads": 8
+          },
+          "max_decoding_steps": 20, 
+          "attention": {
+            "type" : "dot_product"
+            },
+          "use_bleu": true,
+          "bleu_ngram_weights": [0.5, 0.5, 0,0, 0.0],
+          "beam_size": 8,
+          "target_embedding_dim": 256 
+        },
+    "data_loader": {
+      "type": "pytorch_dataloader",
+      "batch_size" : 2,
+      "shuffle": true
+    },
+    "trainer": {
+      "num_epochs": 1,
+      "patience": 1,
+      "cuda_device": 0,
+      "optimizer": {
+        "type": "adam",
+        "lr": 0.0001
+      }
+    }
+  }

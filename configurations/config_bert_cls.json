@@ -23,7 +23,6 @@
  
   "model": {
     "type": "ranker",
-    "dropout": 0.35,
     "text_field_embedder": {
       "token_embedders": {
         "tokens": {
@@ -43,8 +42,8 @@
     "batch_size" : 8
   },
   "trainer": {
-    "num_epochs": 40,
-    "patience": 10,
+    "num_epochs": 1000,
+    "patience": 500,
     "validation_metric": "+mrr",
     "cuda_device": 0,
     "optimizer": {
