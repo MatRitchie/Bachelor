@@ -1,5 +1,5 @@
 # Bachelor
-This repository contains the code for a bachelor project, which aims to predict the title of a song, where the title is not present in the lyric. Throughout the project the library of Allennlp has been used (Gardner et al., 2017).
+This repository contains the code for a bachelor project, which aims to predict the title of a song, where the title is not present in the lyric. Throughout the project the library of Allennlp (Gardner et al., 2017) has been used .
 The dataset used in this project is from Kaggle  (Saha, n.d.)
 
 
