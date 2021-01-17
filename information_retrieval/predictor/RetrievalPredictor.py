@@ -29,23 +29,23 @@ class InformationRetrievalPredictor(Predictor):
     @overrides
     def _json_to_instance(self, json_dict: JsonDict) -> Instance:
         lyric = json_dict['lyric']
-        title_options = json_dict['title_options'] #it might make more sense to just use the title_options from the training data
+        title_options = json_dict['title_options']  
         return self._dataset_reader.text_to_instance(title_options=title_options, lyric=lyric)
         
     @overrides
     def predict_instance(self, instance: Instance) -> JsonDict:
         outputs = self._model.forward_on_instance(instance)
        
-        #getting the five most likely songs
-        highest_n = 5
-        top_5_predected_titles = []
-        top_5_predected_indices = outputs['logits'].argsort()[::-1][:highest_n]
+        #getting the three most likely songs
+        highest_n = 3
+        top_3_predected_titles = []
+        top_3_predected_indices = outputs['logits'].argsort()[::-1][:highest_n]
         for i in range(highest_n):
-            top_5_predected_titles.append( instance.fields['title_options'][top_5_predected_indices[i]])
+            top_3_predected_titles.append( instance.fields['title_options'][top_3_predected_indices[i]])
 
         outputs['lyric'] = [str(token) for token in instance.fields['lyric'].tokens]
         predicted_title = instance.fields['title_options'][outputs['logits'].argmax()]  #gets index with max score and indexes into title_options
         outputs['predicted_title'] = [str(token) for token in predicted_title.tokens]
-        outputs['top_5_predected_titles'] = [str(token.tokens) for token in top_5_predected_titles]
+        outputs['top_3_predected_titles'] = [str(token.tokens) for token in top_3_predected_titles]
         
         return sanitize(outputs)
