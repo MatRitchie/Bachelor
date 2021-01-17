@@ -28,8 +28,6 @@ def first_nonzero(t):
 
 def mrr(y_pred, y_true, mask):
     y_pred = y_pred.masked_fill(~mask, -1)                              #Replaces all mask values with -1
-    #y_true = y_true.ge(y_true.max(dim=-1, keepdim=True).values).float() # This binarizes the label, which isn't needed, since it is a one-hot label
-
     _, rank = y_pred.sort(descending=True, dim=-1)                      #Sort the predicted scores in descending order, gets predicted ranking
     ordered_truth = y_true.gather(1, rank)                              #gather indexes from predicted scores from true scores
     
