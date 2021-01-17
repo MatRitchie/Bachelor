@@ -49,8 +49,8 @@ class DocumentRankerTFIDF(Model):
     
         scores = np.random.rand(len(meta_title[0])) # retuns an array of random numbers between 0 and 1
        
-        scores = torch.from_numpy(scores) # convert to tensor 
-        scores = scores.unsqueeze(0)       # simulate dimension of batch= 1 (1, number of titles)
+        scores = torch.from_numpy(scores)           # convertS to tensor 
+        scores = scores.unsqueeze(0)                # simulate dimension of batch= 1 (1, number of titles)
 
         output_dict = {"logits": scores}  
 
@@ -81,7 +81,6 @@ class DocumentRankerTFIDF(Model):
             
         return output_dict
 
-    #@overrides
     def make_output_human_readable(
         self, output_dict: Dict[str, torch.Tensor]
     ) -> Dict[str, torch.Tensor]:

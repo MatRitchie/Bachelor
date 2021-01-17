@@ -56,7 +56,7 @@ class DocumentRanker(Model):
         mask = get_text_field_mask(lyric).long()
 
         embedded_options = self._text_field_embedder(title_options, num_wrapping_dims=1) 
-        options_mask = get_text_field_mask(title_options, num_wrapping_dims=1).long() #har til føjet det med num_wrapping_dim
+        options_mask = get_text_field_mask(title_options, num_wrapping_dims=1).long() 
 
         #make pairs of (lyric, title) instead of (lyric, (title1, title2,...))
         embedded_text = embedded_text.unsqueeze(1).expand(-1, embedded_options.size(1), -1, -1)
@@ -97,14 +97,13 @@ class DocumentRanker(Model):
 
         return output_dict
 
-    #@overrides
+  
     def make_output_human_readable(
         self, output_dict: Dict[str, torch.Tensor]
     ) -> Dict[str, torch.Tensor]:
         return output_dict
 
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
-      
         metrics = {
             "mrr": self._mrr.get_metric(reset),
             "bleu": self._bleu.get_metric(reset).get('BLEU')  #Extracting the value from dict

@@ -53,7 +53,7 @@ class DocumentRankerTFIDF(Model):
        
         #the documents in this case is the titles, and the lyric is the query
         #all the titles = corpus 
-        #check in every title if the words from the lyric appear, if so then calculate the tfidf for each word and add to document score
+        #check in every title if the words from the lyric appear, if so then calculate the tf-idf for each word and add to document score
 
         query = meta_lyric
         docs = meta_title[0] 
@@ -91,19 +91,16 @@ class DocumentRankerTFIDF(Model):
             self._mrr(scores, labels, label_mask)      
             self._bleu(candidate_title, reference_title)
             loss = self._loss(scores, torch.max(labels, 1)[1])
-
             output_dict["loss"] = loss 
             
         return output_dict
 
-    #@overrides
     def make_output_human_readable(
         self, output_dict: Dict[str, torch.Tensor]
     ) -> Dict[str, torch.Tensor]:
         return output_dict
 
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
-      
         metrics = {
             "mrr": self._mrr.get_metric(reset),
             "bleu": self._bleu.get_metric(reset).get('BLEU')  #Extracting the value from dict
