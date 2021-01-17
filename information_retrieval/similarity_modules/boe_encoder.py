@@ -42,7 +42,11 @@ class BagOfEmbeddings(RelevanceMatcher):
             ],
             dim=1,
         )
+
         dense_out = self.dense(interaction_vector)
         score = torch.squeeze(dense_out,1)
-
+        
         return score
+
+        
+        
